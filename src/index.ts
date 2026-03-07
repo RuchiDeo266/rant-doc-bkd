@@ -9,6 +9,7 @@ import cors from "cors";
 import { errorHandler } from "./middleware/error-handler.ts";
 import multer from "multer";
 import rantRouter from "./routes/rant-doc-routes.ts";
+import { shareRouter } from "./controllers/article-share.ts";
 
 dotenv.config();
 const app = express();
@@ -63,8 +64,7 @@ app.use(
 //   res.send(`<p> hello </p>`);
 // });
 
-app.use("/api", articleRoutes);
-app.use("/api", rantRouter);
+app.use("/api", articleRoutes, rantRouter, shareRouter);
 
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;

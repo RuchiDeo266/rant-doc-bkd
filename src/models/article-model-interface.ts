@@ -8,5 +8,6 @@ export interface Article {
   image: string;
   audio: string;
   tags: string[];
-  like: string;
+  like?: string;
+  share_count?: string;
 }
