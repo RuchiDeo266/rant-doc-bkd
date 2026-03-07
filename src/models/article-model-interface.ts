@@ -5,7 +5,9 @@ export interface Article {
   subtitle: string;
   body: string;
   video_url: string;
-  image_url: string;
+  image: string;
   audio: string;
   tags: string[];
+  like?: string;
+  share_count?: string;
 }

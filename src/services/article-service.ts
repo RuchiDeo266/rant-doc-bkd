@@ -1,50 +1,76 @@
 import { ArticleRepository } from "../repo/articlerep.ts";
 import type { Article } from "../models/article-model-interface.ts";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import { MediaService } from "./media-serivice.ts";
 
 export class ArticleService {
   private repo: ArticleRepository;
+  private media: MediaService;
 
-  constructor(repo: ArticleRepository) {
+  constructor(repo: ArticleRepository, media: MediaService) {
     this.repo = repo; // Dependency injection for testability
+    this.media = media;
   }
 
-  async getArticles(): Promise<Article[]> {
-    return this.repo.getAll(); // Add validation/logic if needed
+  async getArticlebyID(id: number, client?: SupabaseClient) {
+    return this.repo.getById(id, client);
   }
 
-  async addArticle(article: Omit<Article, "id">): Promise<Article> {
-    // Business logic: e.g., validate title length
+  async getArticles(client?: SupabaseClient): Promise<Article[]> {
+    return this.repo.getAll(client); // Add validation/logic if needed
+  }
+
+  async getArticleByTitle(
+    title: string,
+    client?: SupabaseClient,
+  ): Promise<Article[]> {
+    return this.repo.getByTitle(title, client);
+  }
+
+  async addArticle(
+    article: Omit<Article, "id">,
+    client?: SupabaseClient,
+  ): Promise<Article> {
     if (
       !article.title ||
       !article.body ||
-      !article.image_url ||
+      !article.image ||
       !article.subtitle ||
-      !article.video_url
+      !article.video_url ||
+      !article.tags
     )
       throw new Error("Missing required fields");
-    return this.repo.create(article);
+    return this.repo.create(article, client);
   }
 
   async updateArticle(
     article: Omit<Article, "id">,
     id: number,
+    client?: SupabaseClient,
   ): Promise<Article> {
     if (
       !article.title ||
       !article.body ||
-      !article.image_url ||
+      !article.subtitle ||
+      !article.image ||
       !article.subtitle ||
       !article.video_url
     )
       throw new Error("Missing required fields");
-    return this.repo.update(article, id);
+    return this.repo.update(article, id, client);
   }
 
   async deleteArticle(
     id: number,
+    client?: SupabaseClient,
   ): Promise<{ status: boolean; message: string }> {
-    const result = await this.repo.deleteArticle(id);
-    if (!result) throw new Error("Deleting failed");
-    return { status: result, message: "Article Successfully Deleted" };
+    const result = await this.repo.getById(id, client);
+    if (!result) {
+      throw new Error("Failed to get data");
+    }
+
+    await this.media.deleteFromR2([result[0].image, result[0].audio]);
+
+    return { status: true, message: "Article Successfully Deleted" };
   }
 }
