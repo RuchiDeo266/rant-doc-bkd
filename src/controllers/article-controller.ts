@@ -20,6 +20,15 @@ export const getArticles = async (_: any, res: Response) => {
   }
 };
 
+export const getArticlesbyID = async (req: Request, res: Response) => {
+  try {
+    const articles = await service.getArticlebyID(Number(req.params.id));
+    res.json({ articles });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 let image_url: string, audio_url: string;
 
 export const createArticle = async (req: Request, res: Response) => {

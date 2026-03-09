@@ -34,7 +34,7 @@ if (missingEnvVars.length > 0) {
 // Morgan logger FIRST - must be before any other middleware
 app.use(morgan("dev"));
 // Custom request logger for debugging
-app.use((req, res, next) => {
+app.use((req, _, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
 });
@@ -58,11 +58,6 @@ app.use(
     origin: process.env.CORS_ORIGIN || true,
   }),
 );
-
-// app.get("/api/rant-articles/like/:id", (req, res) => {
-//   console.log(req.params.id);
-//   res.send(`<p> hello </p>`);
-// });
 
 app.use("/api", articleRoutes, rantRouter, shareRouter);
 
