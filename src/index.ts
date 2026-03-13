@@ -53,9 +53,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const allowedOrigins = [
-  "http://localhost:3000",
-  "http://127.0.0.1:3000",
-  "http://172.16.0.2:3000",
+  process.env.CORS_ORIGIN1,
+  process.env.CORS_ORIGIN2,
+  process.env.CORS_ORIGIN3,
+  process.env.CORS_ORIGIN4,
 ];
 
 app.use(
