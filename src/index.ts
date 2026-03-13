@@ -7,7 +7,6 @@ import rateLimit from "express-rate-limit";
 import morgan from "morgan";
 import cors from "cors";
 import { errorHandler } from "./middleware/error-handler.ts";
-import multer from "multer";
 import rantRouter from "./routes/rant-doc-routes.ts";
 import { shareRouter } from "./controllers/article-share.ts";
 
@@ -40,11 +39,11 @@ app.use((req, _, next) => {
 });
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per window
-  standardHeaders: "draft-7", // Return rate limit info in headers
-  legacyHeaders: false, // Disable old X-RateLimit headers
-  message: "Too many requests from this IP, please try again later.", // Custom message
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+  message: "Too many requests from this IP, please try again later.",
 });
 
 app.use(limiter);
@@ -53,9 +52,24 @@ app.use(limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
+  "http://172.16.0.2:3000",
+];
+
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || true,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    // credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
