@@ -29,7 +29,34 @@ if (missingEnvVars.length > 0) {
   console.error("Missing environment variables:", missingEnvVars);
   process.exit(1);
 }
+const allowedOrigins = [
+  process.env.CORS_ORIGIN1,
+  process.env.CORS_ORIGIN2,
+  process.env.CORS_ORIGIN3,
+  process.env.CORS_ORIGIN4,
+  process.env.CORS_ORIGIN5,
+  process.env.CORS_ORIGIN6,
+];
 
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.log(`CORS blocked origin: ${origin}`); // ← log this!
+        callback(new Error(`Not allowed by CORS → ${origin}`));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // keep if you use cookies/auth later
+    optionsSuccessStatus: 204,
+  }),
+);
 // Morgan logger FIRST - must be before any other middleware
 app.use(morgan("dev"));
 // Custom request logger for debugging
@@ -51,30 +78,6 @@ app.use(limiter);
 // Parse JSON bodies AFTER logger
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const allowedOrigins = [
-  process.env.CORS_ORIGIN1,
-  process.env.CORS_ORIGIN2,
-  process.env.CORS_ORIGIN3,
-  process.env.CORS_ORIGIN4,
-  process.env.CORS_ORIGIN5,
-  process.env.CORS_ORIGIN6,
-];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    // credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  }),
-);
 
 app.use("/api", articleRoutes, rantRouter, shareRouter);
 

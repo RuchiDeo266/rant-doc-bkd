@@ -139,9 +139,8 @@ export const updateArticle = async (req: Request, res: Response) => {
 export const deleteArticle = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    const token = req.headers.authorization?.split(" ")[1];
-    const supa = createSupabaseClient(token);
-    const message = await service.deleteArticle(id, supa);
+    console.log(id);
+    const message = await service.deleteArticle(id);
     res.status(201).json(message);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

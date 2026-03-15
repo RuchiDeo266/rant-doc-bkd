@@ -1,12 +1,19 @@
 import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
+  HeadBucketCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
 import { r2Client } from "../config/r2-config.ts";
 import sharp from "sharp";
 import { v4 as uuidv4 } from "uuid";
-
+type R2DeleteResult = {
+  success: boolean;
+  deleted: string[];
+  failed: string[];
+  message?: string;
+};
 export class MediaService {
   private bucket: string;
 
@@ -34,7 +41,7 @@ export class MediaService {
         }),
       );
 
-      return `${process.env.R2_PUBLIC_DOMAIN}/${key}`;
+      return `${process.env.R2_PUBLIC_DOMAIN}/rantdoc/${key}`;
     } catch (error) {
       console.error("Image upload error:", error);
       throw new Error("Failed to upload image");
@@ -46,7 +53,8 @@ export class MediaService {
     originalName: string,
     mimetype: string,
   ): Promise<string> {
-    const key = `articles/audio/${Date.now()}-${originalName}`;
+    const ogname = originalName.trim();
+    const key = `articles/audio/${Date.now()}-${ogname}`;
     try {
       await r2Client.send(
         new PutObjectCommand({
@@ -56,31 +64,75 @@ export class MediaService {
           ContentType: mimetype,
         }),
       );
-      return `${process.env.R2_PUBLIC_DOMAIN}/${key}`;
+      return `${process.env.R2_PUBLIC_DOMAIN}/rantdoc/${key}`;
     } catch (error) {
       console.error("Image upload error:", error);
       throw new Error("Failed to fetch video");
     }
   }
 
-  async deleteFromR2(key: string[]): Promise<void> {
+  private getR2Key(url: string) {
+    return decodeURIComponent(new URL(url).pathname.slice(1));
+  }
+
+  async deleteFromR2(urls: string[]): Promise<R2DeleteResult> {
+    const deleted: string[] = [];
+    const failed: string[] = [];
+
     try {
+      const keys = urls.filter(Boolean).map((url) => this.getR2Key(url));
+
+      if (!keys.length) {
+        return {
+          success: false,
+          deleted: [],
+          failed: [],
+          message: "No valid URLs provided",
+        };
+      }
+
       const command = new DeleteObjectsCommand({
-        Bucket: process.env.R2_BUCKET_NAME,
+        Bucket: process.env.R2_BUCKET,
         Delete: {
-          Objects: key.map((Key) => ({ Key })),
-          Quiet: true, // less verbose response
+          Objects: keys.map((Key) => ({ Key })),
+          Quiet: false,
         },
       });
 
-      await r2Client.send(command);
-      console.log(`Deleted: ${key}`);
-    } catch (err: any) {
-      if (err.name === "NoSuchKey") {
-        console.log(`File not found, already deleted: ${key}`);
-        return;
+      const response = await r2Client.send(command);
+
+      // successfully deleted files
+      if (response.Deleted) {
+        response.Deleted.forEach((obj) => {
+          if (obj.Key) deleted.push(obj.Key);
+        });
       }
-      throw err;
+
+      // failed deletions
+      if (response.Errors) {
+        response.Errors.forEach((err) => {
+          if (err.Key) failed.push(err.Key);
+        });
+      }
+
+      return {
+        success: failed.length === 0,
+        deleted,
+        failed,
+        message:
+          failed.length > 0
+            ? "Some files failed to delete"
+            : "Files deleted successfully",
+      };
+    } catch (error: any) {
+      console.error("R2 deletion error:", error);
+
+      return {
+        success: false,
+        deleted: [],
+        failed: urls,
+        message: error.message || "Unexpected R2 deletion error",
+      };
     }
   }
 }

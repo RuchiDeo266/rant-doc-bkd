@@ -2,10 +2,12 @@ import { ArticleRepository } from "../repo/articlerep.ts";
 import type { Article } from "../models/article-model-interface.ts";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { MediaService } from "./media-serivice.ts";
+import { supabase } from "../config/superbase-config.ts";
 
 export class ArticleService {
   private repo: ArticleRepository;
   private media: MediaService;
+  private client: SupabaseClient = supabase;
 
   constructor(repo: ArticleRepository, media: MediaService) {
     this.repo = repo; // Dependency injection for testability
@@ -36,7 +38,7 @@ export class ArticleService {
       !article.body ||
       !article.image ||
       !article.subtitle ||
-      !article.video_url ||
+      !article.audio ||
       !article.tags
     )
       throw new Error("Missing required fields");
@@ -62,14 +64,15 @@ export class ArticleService {
 
   async deleteArticle(
     id: number,
-    client?: SupabaseClient,
   ): Promise<{ status: boolean; message: string }> {
-    const result = await this.repo.getById(id, client);
+    const result = await this.repo.getById(id);
+    console.log(result);
     if (!result) {
       throw new Error("Failed to get data");
     }
 
-    await this.media.deleteFromR2([result[0].image, result[0].audio]);
+    await this.media.deleteFromR2([result[0]?.image, result[0]?.audio]);
+    await this.repo.deleteArticle(id);
 
     return { status: true, message: "Article Successfully Deleted" };
   }

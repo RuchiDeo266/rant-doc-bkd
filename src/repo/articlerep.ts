@@ -4,6 +4,17 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 type NewArticle = Omit<Article, "id">;
 type UpdateArticle = Partial<Omit<Article, "id">>;
+type DeleteArticleResult = {
+  success: boolean;
+  articleDeleted: boolean;
+  deleted: {
+    view_logs: number;
+    article_likes: number;
+    rant_views: number;
+    article: number;
+  };
+  errors?: string[];
+};
 
 export class ArticleRepository {
   async getById(id: number, client: SupabaseClient = supabase) {
@@ -72,9 +83,76 @@ export class ArticleRepository {
   async deleteArticle(
     id: number,
     client: SupabaseClient = supabase,
-  ): Promise<boolean> {
-    const { error } = await client.from("article").delete().eq("id", id);
-    if (error) throw new Error(error.message);
-    return true;
+  ): Promise<DeleteArticleResult> {
+    const errors: string[] = [];
+    const deleted = {
+      view_logs: 0,
+      article_likes: 0,
+      rant_views: 0,
+      article: 0,
+    };
+
+    try {
+      // delete view_logs
+      const { data: viewLogs, error: viewLogError } = await client
+        .from("view_logs")
+        .delete()
+        .eq("rant_id", id)
+        .select();
+
+      // if (viewLogError) {
+      //   errors.push(`view_logs: ${viewLogError.message}`);
+      // } else {
+      //   deleted.view_logs = viewLogs?.length || 0;
+      // }
+
+      // delete article_likes
+      const { data: likes, error: likeError } = await client
+        .from("article_likes")
+        .delete()
+        .eq("article_id", id)
+        .select();
+
+      // if (likeError) {
+      //   errors.push(`article_likes: ${likeError.message}`);
+      // } else {
+      //   deleted.article_likes = likes?.length || 0;
+      // }
+
+      // delete rant_views
+      const { data: views, error: viewsError } = await client
+        .from("rant_views")
+        .delete()
+        .eq("id", id)
+        .select();
+
+      // if (viewsError) {
+      //   errors.push(`rant_views: ${viewsError.message}`);
+      // } else {
+      //   deleted.rant_views = views?.length || 0;
+      // }
+
+      // delete article (main table)
+      const { data: article, error: articleError } = await client
+        .from("article")
+        .delete()
+        .eq("id", id)
+        .select();
+
+      if (articleError) {
+        errors.push(`article: ${articleError.message}`);
+      } else {
+        deleted.article = article?.length || 0;
+      }
+
+      return {
+        success: errors.length === 0 && deleted.article > 0,
+        articleDeleted: deleted.article > 0,
+        deleted,
+        errors: errors.length ? errors : undefined,
+      };
+    } catch (err: any) {
+      throw new Error(errors.toString());
+    }
   }
 }
