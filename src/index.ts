@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import articleRoutes from "./routes/article-routes.ts";
 import { supabase } from "./config/superbase-config.ts";
 
-import rateLimit from "express-rate-limit";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import morgan from "morgan";
 import cors from "cors";
 import { errorHandler } from "./middleware/error-handler.ts";
@@ -13,6 +13,7 @@ import { shareRouter } from "./controllers/article-share.ts";
 dotenv.config();
 const app = express();
 
+app.set("trust proxy", 1);
 // Validate required environment variables at startup
 const requiredEnvVars = [
   "SUPABASE_URL",
@@ -47,19 +48,19 @@ app.use(
       if (allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        console.log(`CORS blocked origin: ${origin}`); // ← log this!
+        console.log(`CORS blocked origin: ${origin}`);
         callback(new Error(`Not allowed by CORS → ${origin}`));
       }
     },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true, // keep if you use cookies/auth later
+    credentials: true,
     optionsSuccessStatus: 204,
   }),
 );
-// Morgan logger FIRST - must be before any other middleware
+
 app.use(morgan("dev"));
-// Custom request logger for debugging
+
 app.use((req, _, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
   next();
@@ -71,6 +72,11 @@ const limiter = rateLimit({
   standardHeaders: "draft-7",
   legacyHeaders: false,
   message: "Too many requests from this IP, please try again later.",
+  keyGenerator: (req, _) => {
+    const clientIp =
+      (req.headers["cf-connecting-ip"] as string) || req.ip || "unknown";
+    return ipKeyGenerator(clientIp);
+  },
 });
 
 app.use(limiter);
