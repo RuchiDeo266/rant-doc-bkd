@@ -89,6 +89,7 @@ app.use("/api", articleRoutes, rantRouter, shareRouter);
 
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log("Login attempt:", email);
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,

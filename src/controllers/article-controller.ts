@@ -106,7 +106,6 @@ export const createArticle = async (req: Request, res: Response) => {
         video_url: video_url || null,
         created_at: new Date(),
         tags,
-        like,
       },
       supa,
     );
