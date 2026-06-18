@@ -50,14 +50,7 @@ export class ArticleService {
     id: number,
     client?: SupabaseClient,
   ): Promise<Article> {
-    if (
-      !article.title ||
-      !article.body ||
-      !article.subtitle ||
-      !article.image ||
-      !article.subtitle ||
-      !article.video_url
-    )
+    if (!article.title || !article.body || !article.subtitle || !article.tags)
       throw new Error("Missing required fields");
     return this.repo.update(article, id, client);
   }
@@ -66,7 +59,7 @@ export class ArticleService {
     id: number,
   ): Promise<{ status: boolean; message: string }> {
     const result = await this.repo.getById(id);
-    console.log(result);
+
     if (!result) {
       throw new Error("Failed to get data");
     }

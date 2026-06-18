@@ -13,7 +13,7 @@ export const postView = async (req: Request, res: Response) => {
     throw new Error("Invalid IP address");
   }
   const articleId = Number(req.params.id);
-  console.log(articleId, ip);
+
   const ipHash = hashService.hash(ip);
   try {
     const result = await viewService.incrementView(articleId, ipHash);

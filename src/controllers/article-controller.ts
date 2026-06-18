@@ -13,7 +13,6 @@ const service = new ArticleService(repo, media);
 export const getArticles = async (_: any, res: Response) => {
   try {
     const articles = await service.getArticles();
-    console.log(articles);
     res.json({ articles });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -138,7 +137,6 @@ export const updateArticle = async (req: Request, res: Response) => {
 export const deleteArticle = async (req: Request, res: Response) => {
   try {
     const id = Number(req.params.id);
-    console.log(id);
     const message = await service.deleteArticle(id);
     res.status(201).json(message);
   } catch (error: any) {
