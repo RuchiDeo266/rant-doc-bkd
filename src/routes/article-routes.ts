@@ -11,6 +11,8 @@ import { uploadArticleMedia } from "../middleware/multer-handler.ts";
 import { getLike } from "../controllers/article-like.controller.ts";
 const router = Router();
 
+// CRUD operations for articles : ADMIN / OWNER
+
 router.post("/articles", authMiddleware, uploadArticleMedia, createArticle);
 router.get("/articles", getArticles);
 router.get("/articles/:id", getArticlesbyID);
