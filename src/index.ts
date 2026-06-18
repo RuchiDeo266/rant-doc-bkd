@@ -6,11 +6,13 @@ import { supabase } from "./config/superbase-config.ts";
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import morgan from "morgan";
 import cors from "cors";
+// import path from "path";
 import { errorHandler } from "./middleware/error-handler.ts";
 import rantRouter from "./routes/rant-doc-routes.ts";
 import { shareRouter } from "./controllers/article-share.ts";
 
 dotenv.config();
+// dotenv.config({ path: path.resolve(process.cwd(), '.production')
 const app = express();
 
 app.set("trust proxy", 1);
