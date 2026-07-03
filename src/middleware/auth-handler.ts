@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { supabase } from "../config/superbase-config.ts";
+import { supabase } from "../config/superbase-config";
 import type { User } from "@supabase/supabase-js";
 
 interface UserRequest extends Request {

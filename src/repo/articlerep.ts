@@ -1,5 +1,5 @@
-import { supabase } from "../config/superbase-config.ts";
-import type { Article } from "../models/article-model-interface.ts";
+import { supabase } from "../config/superbase-config";
+import type { Article } from "../models/article-model-interface";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
 type NewArticle = Omit<Article, "id">;

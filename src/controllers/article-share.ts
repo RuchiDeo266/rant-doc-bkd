@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
-import { supabase } from "../config/superbase-config.ts";
+import { supabase } from "../config/superbase-config";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const shareRouter = Router();
@@ -26,14 +26,14 @@ export const postShareCount = async (req: Request, res: Response) => {
 
 export const getShareCount = async (req: Request, res: Response) => {
   const rantId = req.params.id;
-  console.log(rantId);
+
   try {
     const { data } = await client
       .from("article")
       .select("share_count")
       .eq("id", rantId)
       .single();
-    console.log(data);
+
     res.json({ shareCount: data?.share_count ?? 0 });
   } catch (error: any) {
     throw new Error("error in fetching data", error);

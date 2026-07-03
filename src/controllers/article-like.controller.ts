@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { ArticleLikeRepository } from "../repo/article-like.ts";
-import { HashService } from "../services/hash.service.ts";
+import { ArticleLikeRepository } from "../repo/article-like";
+import { HashService } from "../services/hash.service";
 
 const repo = new ArticleLikeRepository();
 const hashService = new HashService("10");

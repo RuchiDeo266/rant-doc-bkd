@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { ViewService } from "../repo/article-view-repo.ts";
-import { HashService } from "../services/hash.service.ts";
+import { ViewService } from "../repo/article-view-repo";
+import { HashService } from "../services/hash.service";
 
 const viewService = new ViewService();
 const hashService = new HashService("10");
@@ -13,7 +13,7 @@ export const postView = async (req: Request, res: Response) => {
     throw new Error("Invalid IP address");
   }
   const articleId = Number(req.params.id);
-  console.log(articleId, ip);
+
   const ipHash = hashService.hash(ip);
   try {
     const result = await viewService.incrementView(articleId, ipHash);

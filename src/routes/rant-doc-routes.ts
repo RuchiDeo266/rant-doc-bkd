@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getLike, postLike } from "../controllers/article-like.controller.ts";
-import { getView, postView } from "../controllers/view-controller.ts";
-import { shareRouter } from "../controllers/article-share.ts";
-import { getShareCount, postShareCount } from "../controllers/article-share.ts";
+import { getLike, postLike } from "../controllers/article-like.controller";
+import { getView, postView } from "../controllers/view-controller";
+import { shareRouter } from "../controllers/article-share";
+import { getShareCount, postShareCount } from "../controllers/article-share";
 
 const rantRouter = Router();
 

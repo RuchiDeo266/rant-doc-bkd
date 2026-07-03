@@ -1,6 +1,6 @@
 // backend/services/viewService.js
 import { SupabaseClient } from "@supabase/supabase-js";
-import { supabase } from "../config/superbase-config.ts";
+import { supabase } from "../config/superbase-config";
 import { randomUUID } from "crypto";
 
 export class ViewService {
@@ -15,7 +15,6 @@ export class ViewService {
         .eq("ip_address", ipAddress)
         .maybeSingle();
 
-      console.log(existing);
       if (existing) {
         return { success: false, message: "Already viewed" };
       }
@@ -31,7 +30,6 @@ export class ViewService {
         rant: rantId,
       });
 
-      console.log(data);
       if (error) throw error;
 
       await this.client.from("view_logs").insert({
