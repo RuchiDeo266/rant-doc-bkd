@@ -32,7 +32,7 @@ jobs:
   approval:
     needs: checks
     runs-on: ubuntu-latest
-    environment: production
+    environment: aws-deployment
     steps:
       - run: echo "✅ Approved for Production Deployment"
 
