@@ -25,7 +25,8 @@
     "express-rate-limit": "^8.2.1",
     "morgan": "^1.10.1",
     "multer": "^2.0.2",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "wasm-vips": "^0.0.18"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -37,7 +38,6 @@
     "nodemon": "^3.1.11",
     "serverless": "^4.38.1",
     "serverless-offline": "^14.7.4",
-    "sharp": "^0.35.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

@@ -16,13 +16,6 @@ const router = Router();
 router.get("/articles", getArticles);
 router.get("/articles/:id", getArticlesbyID);
 router.post("/articles", authMiddleware, uploadArticleMedia, createArticle);
-router.post("/debug/articles", async (req, res) => {
-  res.status(200).json({
-    message: "debug article route works",
-    body: req.body,
-    contentType: req.get("content-type"),
-  });
-});
 // router.post("/articles-insert", authMiddleware, createArticle);
 router.put("/articles-update/:id", authMiddleware, updateArticle);
 router.delete("/articles-delete/:id", authMiddleware, deleteArticle);

@@ -19,9 +19,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Rebuild sharp for Lambda (linux x64, glibc)
-        run: npm install --os=linux --cpu=x64 --libc=glibc sharp
-
       - name: Type Check
         run: npx tsc --noEmit
 

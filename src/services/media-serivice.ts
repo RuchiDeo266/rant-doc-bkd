@@ -1,6 +1,6 @@
 import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { r2Client } from "../config/r2-config";
-import sharp from "sharp";
+import Vips from "wasm-vips";
 
 type R2DeleteResult = {
   success: boolean;
@@ -8,6 +8,21 @@ type R2DeleteResult = {
   failed: string[];
   message?: string;
 };
+
+let vipsPromise: ReturnType<typeof Vips> | null = null;
+function getVips() {
+  if (!vipsPromise) vipsPromise = Vips();
+  return vipsPromise;
+}
+
+async function compressToAvif(fileBuffer: Buffer): Promise<Buffer> {
+  const vips = await getVips();
+  const image = vips.Image.newFromBuffer(fileBuffer);
+  const outBuffer = image.writeToBuffer(".avif", { Q: 80, effort: 4 });
+  image.delete(); // free native memory
+  return Buffer.from(outBuffer);
+}
+
 export class MediaService {
   private bucket: string;
 
@@ -22,9 +37,7 @@ export class MediaService {
   ): Promise<string> {
     const key = `articles/images/${Date.now()}-${originalName}`;
     try {
-      const compressed = await sharp(fileBuffer)
-        .avif({ quality: 80, effort: 4 }) // High quality, small size
-        .toBuffer();
+      const compressed = await compressToAvif(fileBuffer);
 
       await r2Client.send(
         new PutObjectCommand({
