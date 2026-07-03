@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { ViewService } from "../repo/article-view-repo.ts";
-import { HashService } from "../services/hash.service.ts";
+import { ViewService } from "../repo/article-view-repo";
+import { HashService } from "../services/hash.service";
 
 const viewService = new ViewService();
 const hashService = new HashService("10");

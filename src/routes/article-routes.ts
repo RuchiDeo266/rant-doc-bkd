@@ -5,18 +5,25 @@ import {
   updateArticle,
   deleteArticle,
   getArticlesbyID,
-} from "../controllers/article-controller.ts";
-import { authMiddleware } from "../middleware/auth-handler.ts";
-import { uploadArticleMedia } from "../middleware/multer-handler.ts";
-import { getLike } from "../controllers/article-like.controller.ts";
+} from "../controllers/article-controller";
+import { authMiddleware } from "../middleware/auth-handler";
+import { uploadArticleMedia } from "../middleware/multer-handler";
+import { getLike } from "../controllers/article-like.controller";
 const router = Router();
 
 // CRUD operations for articles : ADMIN / OWNER
 
-router.post("/articles", authMiddleware, uploadArticleMedia, createArticle);
 router.get("/articles", getArticles);
 router.get("/articles/:id", getArticlesbyID);
-router.post("/articles-insert", authMiddleware, createArticle);
+router.post("/articles", authMiddleware, uploadArticleMedia, createArticle);
+router.post("/debug/articles", async (req, res) => {
+  res.status(200).json({
+    message: "debug article route works",
+    body: req.body,
+    contentType: req.get("content-type"),
+  });
+});
+// router.post("/articles-insert", authMiddleware, createArticle);
 router.put("/articles-update/:id", authMiddleware, updateArticle);
 router.delete("/articles-delete/:id", authMiddleware, deleteArticle);
 

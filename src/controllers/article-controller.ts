@@ -1,10 +1,11 @@
 import type { Request, Response } from "express";
-import { ArticleService } from "../services/article-service.ts";
-import { ArticleRepository } from "../repo/articlerep.ts";
-import { createSupabaseClient } from "../config/superbase-config.ts";
-import { MediaService } from "../services/media-serivice.ts";
+import { ArticleService } from "../services/article-service";
+import { ArticleRepository } from "../repo/articlerep";
+import { createSupabaseClient } from "../config/superbase-config";
+import { MediaService } from "../services/media-serivice";
 
 import { MulterError } from "multer";
+import { normalizeRequestBody } from "../utils/normalize-body";
 
 const repo = new ArticleRepository();
 const media = new MediaService();
@@ -38,6 +39,8 @@ export const createArticle = async (req: Request, res: Response) => {
     const supa = createSupabaseClient(token);
 
     service.getArticlebyID;
+
+    console.error("Request body:", req.body);
 
     const { title, subtitle, body, video_url, tags: tagsRaw, like } = req.body;
 
@@ -127,7 +130,11 @@ export const updateArticle = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
     const token = req.headers.authorization?.split(" ")[1];
     const supa = createSupabaseClient(token);
-    const article = await service.updateArticle(req.body, id, supa);
+    const normalizedBody = normalizeRequestBody(
+      req.body,
+      req.get("content-type"),
+    );
+    const article = await service.updateArticle(normalizedBody, id, supa);
     res.status(201).json(article);
   } catch (error: any) {
     res.status(400).json({ message: error.message });

@@ -1,7 +1,8 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import * as dotenv from "dotenv";
-
-dotenv.config();
+import dotenv from "dotenv";
+if (!process.env.AWS_LAMBDA_FUNCTION_NAME && !process.env.LAMBDA_TASK_ROOT) {
+  dotenv.config();
+}
 
 export const supabase = createClient(
   process.env.SUPABASE_URL!,

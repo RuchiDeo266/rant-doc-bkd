@@ -1,6 +1,6 @@
 // backend/services/viewService.js
 import { SupabaseClient } from "@supabase/supabase-js";
-import { supabase } from "../config/superbase-config.ts";
+import { supabase } from "../config/superbase-config";
 import { randomUUID } from "crypto";
 
 export class ViewService {

@@ -1,13 +1,7 @@
-import {
-  DeleteObjectCommand,
-  DeleteObjectsCommand,
-  HeadBucketCommand,
-  ListObjectsV2Command,
-  PutObjectCommand,
-} from "@aws-sdk/client-s3";
-import { r2Client } from "../config/r2-config.ts";
+import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { r2Client } from "../config/r2-config";
 import sharp from "sharp";
-import { v4 as uuidv4 } from "uuid";
+
 type R2DeleteResult = {
   success: boolean;
   deleted: string[];

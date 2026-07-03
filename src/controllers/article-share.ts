@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { Router } from "express";
-import { supabase } from "../config/superbase-config.ts";
+import { supabase } from "../config/superbase-config";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const shareRouter = Router();

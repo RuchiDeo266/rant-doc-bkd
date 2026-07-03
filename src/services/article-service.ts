@@ -1,8 +1,8 @@
-import { ArticleRepository } from "../repo/articlerep.ts";
-import type { Article } from "../models/article-model-interface.ts";
+import { ArticleRepository } from "../repo/articlerep";
+import type { Article } from "../models/article-model-interface";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { MediaService } from "./media-serivice.ts";
-import { supabase } from "../config/superbase-config.ts";
+import { MediaService } from "./media-serivice";
+import { supabase } from "../config/superbase-config";
 
 export class ArticleService {
   private repo: ArticleRepository;

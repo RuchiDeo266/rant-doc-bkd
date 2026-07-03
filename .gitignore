@@ -11,6 +11,7 @@ yarn-error.log*
 .env
 .env.production
 .env.development
+env.json
 
 # Other files
 npm-debug.log*
@@ -20,3 +21,13 @@ pnpm-debug.log*
 
 /src/__test__
 jest.config.cjs
+
+# Serverless offline and build artifacts
+undefined/
+.serverless/
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
