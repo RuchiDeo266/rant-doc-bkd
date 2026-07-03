@@ -69,6 +69,7 @@ jobs:
           R2_USER_SECRET_KEY_ID: ${{ secrets.R2_USER_SECRET_KEY_ID }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
           R2_PUBLIC_DOMAIN: ${{ secrets.R2_PUBLIC_DOMAIN }}
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
 
           # CORS & Port
           CORS_ORIGIN1: ${{ secrets.CORS_ORIGIN1 }}
