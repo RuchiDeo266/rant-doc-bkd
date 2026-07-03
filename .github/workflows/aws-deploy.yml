@@ -80,4 +80,4 @@ jobs:
           CORS_ORIGIN6: ${{ secrets.CORS_ORIGIN6 }}
           CORS_ORIGIN7: ${{ secrets.CORS_ORIGIN7 }}
           PORT: ${{ secrets.PORT }}
-        run: npx serverless@3 deploy --stage prod
+        run: npx serverless deploy --stage prod
