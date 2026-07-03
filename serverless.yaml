@@ -1,13 +1,13 @@
-org: peropeko
-app: my-app
-service: my-service # This replaces your old "rant-doc-api" line
+org: rantdocperopeko
+app: rantdoc
+service: my-service
 
 useDotenv: true
 
 provider:
   name: aws
-  runtime: nodejs22.x # Or 20.x depending on your local version
-  region: us-east-1 # Choose your closest AWS region
+  runtime: nodejs22.x
+  region: us-east-1
   environment:
     SUPABASE_URL: ${env:SUPABASE_URL}
     SUPABASE_ANON_KEY: ${env:SUPABASE_ANON_KEY}
