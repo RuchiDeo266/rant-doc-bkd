@@ -39,6 +39,7 @@ jobs:
   deploy-production:
     needs: approval
     runs-on: ubuntu-latest
+    environment: aws-deployment
     steps:
       - uses: actions/checkout@v4
 
