@@ -1,0 +1,30 @@
+org: peropeko
+app: my-app
+service: my-service # This replaces your old "rant-doc-api" line
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs22.x # Or 20.x depending on your local version
+  region: us-east-1 # Choose your closest AWS region
+  environment:
+    SUPABASE_URL: ${env:SUPABASE_URL}
+    SUPABASE_ANON_KEY: ${env:SUPABASE_ANON_KEY}
+    R2_ENDPOINT: ${env:R2_ENDPOINT}
+    R2_USER_ACCESS_KEY_ID: ${env:R2_USER_ACCESS_KEY_ID}
+    R2_USER_SECRET_KEY_ID: ${env:R2_USER_SECRET_KEY_ID}
+    R2_BUCKET: ${env:R2_BUCKET}
+    R2_PUBLIC_DOMAIN: ${env:R2_PUBLIC_DOMAIN}
+    PORT: ${env:PORT}
+
+functions:
+  api:
+    handler: src/lambda.handler
+    timeout: 30 # or 60
+    memorySize: 512
+    events:
+      - httpApi: "*"
+
+plugins:
+  - serverless-offline

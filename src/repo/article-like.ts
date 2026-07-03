@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { supabase } from "../config/superbase-config.ts";
-import type { ArticleLike } from "../models/article-like-mode.interface.js";
+import { supabase } from "../config/superbase-config";
+import type { ArticleLike } from "../models/article-like-mode.interface";
 
 export interface LikeResult {
   success: boolean;

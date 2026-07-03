@@ -1,8 +1,8 @@
-import { ArticleRepository } from "../repo/articlerep.ts";
-import type { Article } from "../models/article-model-interface.ts";
+import { ArticleRepository } from "../repo/articlerep";
+import type { Article } from "../models/article-model-interface";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { MediaService } from "./media-serivice.ts";
-import { supabase } from "../config/superbase-config.ts";
+import { MediaService } from "./media-serivice";
+import { supabase } from "../config/superbase-config";
 
 export class ArticleService {
   private repo: ArticleRepository;
@@ -50,14 +50,7 @@ export class ArticleService {
     id: number,
     client?: SupabaseClient,
   ): Promise<Article> {
-    if (
-      !article.title ||
-      !article.body ||
-      !article.subtitle ||
-      !article.image ||
-      !article.subtitle ||
-      !article.video_url
-    )
+    if (!article.title || !article.body || !article.subtitle || !article.tags)
       throw new Error("Missing required fields");
     return this.repo.update(article, id, client);
   }
@@ -66,7 +59,7 @@ export class ArticleService {
     id: number,
   ): Promise<{ status: boolean; message: string }> {
     const result = await this.repo.getById(id);
-    console.log(result);
+
     if (!result) {
       throw new Error("Failed to get data");
     }
