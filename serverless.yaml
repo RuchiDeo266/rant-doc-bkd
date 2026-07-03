@@ -3,6 +3,7 @@ app: rantdoc
 service: my-service
 
 useDotenv: true
+frameworkVersion: "3.40.0"
 
 provider:
   name: aws
