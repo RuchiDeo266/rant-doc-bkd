@@ -7,8 +7,8 @@ frameworkVersion: "~4.38.1"
 
 provider:
   name: aws
-  runtime: nodejs22.x # Or 20.x depending on your local version
-  region: us-east-1 # Choose your closest AWS region
+  runtime: nodejs24.x # Or 20.x depending on your local version
+  region: eu-north-1 # Choose your closest AWS region
   environment:
     SUPABASE_URL: ${env:SUPABASE_URL}
     SUPABASE_ANON_KEY: ${env:SUPABASE_ANON_KEY}
@@ -18,8 +18,6 @@ provider:
     R2_BUCKET: ${env:R2_BUCKET}
     R2_PUBLIC_DOMAIN: ${env:R2_PUBLIC_DOMAIN}
     PORT: ${env:PORT}
-    SERVERLESS_ACCESS_KEY: ${env:SERVERLESS_ACCESS_KEY}
-    SERVERLESS_LICENSE_KEY: ${env:SERVERLESS_LICENSE_KEY}
 
 functions:
   api:

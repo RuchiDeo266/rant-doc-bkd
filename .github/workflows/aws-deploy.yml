@@ -19,6 +19,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Rebuild sharp for Lambda (linux x64, glibc)
+        run: npm install --os=linux --cpu=x64 --libc=glibc sharp
+
       - name: Type Check
         run: npx tsc --noEmit
 
@@ -68,7 +71,6 @@ jobs:
           R2_USER_SECRET_KEY_ID: ${{ secrets.R2_USER_SECRET_KEY_ID }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
           R2_PUBLIC_DOMAIN: ${{ secrets.R2_PUBLIC_DOMAIN }}
-
 
           # CORS & Port
           CORS_ORIGIN1: ${{ secrets.CORS_ORIGIN1 }}
