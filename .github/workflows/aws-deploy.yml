@@ -2,7 +2,7 @@ name: CI/CD Pipeline - Production Only
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   checks:
@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -57,7 +57,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          
+
           # Application Environment Variables
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -66,7 +66,7 @@ jobs:
           R2_USER_SECRET_KEY_ID: ${{ secrets.R2_USER_SECRET_KEY_ID }}
           R2_BUCKET: ${{ secrets.R2_BUCKET }}
           R2_PUBLIC_DOMAIN: ${{ secrets.R2_PUBLIC_DOMAIN }}
-          
+
           # CORS & Port
           CORS_ORIGIN1: ${{ secrets.CORS_ORIGIN1 }}
           CORS_ORIGIN2: ${{ secrets.CORS_ORIGIN2 }}
@@ -76,4 +76,4 @@ jobs:
           CORS_ORIGIN6: ${{ secrets.CORS_ORIGIN6 }}
           CORS_ORIGIN7: ${{ secrets.CORS_ORIGIN7 }}
           PORT: ${{ secrets.PORT }}
-        run: serverless deploy --stage prod
+        run: npx serverless deploy --stage prod
