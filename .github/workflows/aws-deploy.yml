@@ -1,0 +1,79 @@
+name: CI/CD Pipeline - Production Only
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type Check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
+      - name: Security Audit
+        run: npm audit --audit-level=moderate
+
+  # Manual Approval for Production
+  approval:
+    needs: checks
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "✅ Approved for Production Deployment"
+
+  deploy-production:
+    needs: approval
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to Production
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          
+          # Application Environment Variables
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          R2_ENDPOINT: ${{ secrets.R2_ENDPOINT }}
+          R2_USER_ACCESS_KEY_ID: ${{ secrets.R2_USER_ACCESS_KEY_ID }}
+          R2_USER_SECRET_KEY_ID: ${{ secrets.R2_USER_SECRET_KEY_ID }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_DOMAIN: ${{ secrets.R2_PUBLIC_DOMAIN }}
+          
+          # CORS & Port
+          CORS_ORIGIN1: ${{ secrets.CORS_ORIGIN1 }}
+          CORS_ORIGIN2: ${{ secrets.CORS_ORIGIN2 }}
+          CORS_ORIGIN3: ${{ secrets.CORS_ORIGIN3 }}
+          CORS_ORIGIN4: ${{ secrets.CORS_ORIGIN4 }}
+          CORS_ORIGIN5: ${{ secrets.CORS_ORIGIN5 }}
+          CORS_ORIGIN6: ${{ secrets.CORS_ORIGIN6 }}
+          CORS_ORIGIN7: ${{ secrets.CORS_ORIGIN7 }}
+          PORT: ${{ secrets.PORT }}
+        run: serverless deploy --stage prod
