@@ -10,7 +10,6 @@
     "declaration": false,
     "declarationMap": false,
     "noEmit": true,
-    "ignoreDeprecations": "6.0",
 
     "strict": true,
     "esModuleInterop": true,

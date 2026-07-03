@@ -37,6 +37,7 @@ const allowedOrigins = [
   process.env.CORS_ORIGIN4,
   process.env.CORS_ORIGIN5,
   process.env.CORS_ORIGIN6,
+  process.env.CORS_ORIGIN7,
 ];
 
 app.use(
