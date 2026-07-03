@@ -19,6 +19,11 @@ provider:
     R2_PUBLIC_DOMAIN: ${env:R2_PUBLIC_DOMAIN}
     PORT: ${env:PORT}
 
+build:
+  esbuild:
+    external:
+      - wasm-vips
+
 functions:
   api:
     handler: src/lambda.handler
