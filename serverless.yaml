@@ -3,7 +3,6 @@ app: rantdoc
 service: my-service
 
 useDotenv: true
-frameworkVersion: "~4.38.1"
 
 provider:
   name: aws
@@ -21,7 +20,7 @@ provider:
     SUPABASE_ANON_KEY: ${env:SUPABASE_ANON_KEY}
     R2_ENDPOINT: ${env:R2_ENDPOINT}
     R2_USER_ACCESS_KEY_ID: ${env:R2_USER_ACCESS_KEY_ID}
-    R2_USER_SECRET_KEY_ID: ${env:R2_USER_SECRET_KEY_ID}
+    R2_USER_SECRET_KEY_ID: ${env:R2_USER_SECERT_KEY_ID}
     R2_BUCKET: ${env:R2_BUCKET}
     R2_PUBLIC_DOMAIN: ${env:R2_PUBLIC_DOMAIN}
     PORT: ${env:PORT}
