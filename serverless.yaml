@@ -58,8 +58,8 @@ build:
 functions:
   api:
     handler: src/lambda.handler
-    timeout: 60
-    memorySize: 512
+    timeout: 120
+    memorySize: 1024
     events:
       - httpApi: "*" # This uses HTTP API Gateway v2
 
