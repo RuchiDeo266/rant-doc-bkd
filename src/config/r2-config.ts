@@ -9,7 +9,7 @@ export const r2Client = new S3Client({
   endpoint: process.env.R2_ENDPOINT,
   credentials: {
     accessKeyId: process.env.R2_USER_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.R2_USER_SECRET_KEY_ID!,
+    secretAccessKey: process.env.R2_USER_SECERT_KEY_ID!,
   },
   maxAttempts: 3,
 });

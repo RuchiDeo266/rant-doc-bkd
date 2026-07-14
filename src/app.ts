@@ -20,7 +20,7 @@ const requiredEnvVars = [
   "SUPABASE_ANON_KEY",
   "R2_ENDPOINT",
   "R2_USER_ACCESS_KEY_ID",
-  "R2_USER_SECRET_KEY_ID",
+  "R2_USER_SECERT_KEY_ID",
   "R2_BUCKET",
   "R2_PUBLIC_DOMAIN",
 ];
